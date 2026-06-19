@@ -6,6 +6,7 @@ import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { fetchIngredients } from '../slices/ingredientsSlice';
 import { useSelector, useDispatch } from '../../services/store';
 import { Preloader } from '@ui';
+import styles from './burger-ingredients.module.css';
 
 export const BurgerIngredients: FC = () => {
   const dispatch = useDispatch();
@@ -60,7 +61,19 @@ export const BurgerIngredients: FC = () => {
 
   if (isLoading) return <Preloader />;
 
-  if (error) return <div>{error}</div>;
+  if (ingredients.length === 0)
+    return (
+      <div className={`${styles.title} text text_type_main-medium pt-4`}>
+        Нет игредиентов
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className={`${styles.error} text text_type_main-medium pt-4`}>
+        {error}
+      </div>
+    );
 
   return (
     <BurgerIngredientsUI
