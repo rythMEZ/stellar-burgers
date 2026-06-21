@@ -14,7 +14,6 @@ import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-// import { Component } from 'react';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
@@ -23,7 +22,6 @@ import { getCookie } from '../../utils/cookie';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 
 const App = () => {
-  /** TODO: взять переменные из стора */
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -40,7 +38,7 @@ const App = () => {
   }, []);
 
   const handleModalClose = () => {
-    navigate(-1);
+    navigate(location.state?.background?.pathname);
   };
 
   return (
