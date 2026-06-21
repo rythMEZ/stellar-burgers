@@ -1,5 +1,5 @@
 import { TIngredient } from '@utils-types';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '@api';
 
 type TIngredientState = {
@@ -25,11 +25,7 @@ export const fetchIngredients = createAsyncThunk(
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {
-    setIngredients: (state, action: PayloadAction<TIngredient[]>) => {
-      state.ingredients = action.payload;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
@@ -47,7 +43,5 @@ export const ingredientsSlice = createSlice({
       });
   }
 });
-
-export const { setIngredients } = ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;

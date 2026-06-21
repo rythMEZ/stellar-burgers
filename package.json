@@ -94,17 +94,11 @@
     "build-storybook": "storybook build",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
     "lint:fix": "npm run lint -- --fix",
-    "format": "prettier ./src --write",
-    "commit": "npm run cz"
+    "format": "prettier ./src --write"
   },
   "eslintConfig": {
     "extends": [
       "plugin:storybook/recommended"
     ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

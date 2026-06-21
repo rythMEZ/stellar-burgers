@@ -3,24 +3,18 @@ import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
-import { fetchIngredients } from '../slices/ingredientsSlice';
 import { useSelector, useDispatch } from '../../services/store';
 import { Preloader } from '@ui';
 import styles from './burger-ingredients.module.css';
 
 export const BurgerIngredients: FC = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
-
   const { ingredients, isLoading, error } = useSelector(
     (state) => state.ingredients
   );
 
   const buns = ingredients.filter((item) => item.type === 'bun');
   const mains = ingredients.filter((item) => item.type === 'main');
-  const sauces = ingredients.filter((item) => item.type === 'sauces');
+  const sauces = ingredients.filter((item) => item.type === 'sauce');
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -61,17 +55,17 @@ export const BurgerIngredients: FC = () => {
 
   if (isLoading) return <Preloader />;
 
-  if (ingredients.length === 0)
-    return (
-      <div className={`${styles.title} text text_type_main-medium pt-4`}>
-        Нет игредиентов
-      </div>
-    );
-
   if (error)
     return (
       <div className={`${styles.error} text text_type_main-medium pt-4`}>
         {error}
+      </div>
+    );
+
+  if (ingredients.length === 0)
+    return (
+      <div className={`${styles.title} text text_type_main-medium pt-4`}>
+        Нет игредиентов
       </div>
     );
 
