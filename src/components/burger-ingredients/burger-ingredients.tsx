@@ -6,15 +6,16 @@ import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { useSelector, useDispatch } from '../../services/store';
 import { Preloader } from '@ui';
 import styles from './burger-ingredients.module.css';
+import { selectBuns, selectMains, selectSauces } from '@selectors';
 
 export const BurgerIngredients: FC = () => {
   const { ingredients, isLoading, error } = useSelector(
     (state) => state.ingredients
   );
 
-  const buns = ingredients.filter((item) => item.type === 'bun');
-  const mains = ingredients.filter((item) => item.type === 'main');
-  const sauces = ingredients.filter((item) => item.type === 'sauce');
+  const buns = useSelector(selectBuns);
+  const mains = useSelector(selectMains);
+  const sauces = useSelector(selectSauces);
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);

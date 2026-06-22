@@ -12,7 +12,13 @@ import {
 import '../../index.css';
 import styles from './app.module.css';
 
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
+import {
+  AppHeader,
+  FeedInfo,
+  IngredientDetails,
+  Modal,
+  OrderInfo
+} from '@components';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { useDispatch } from '../../services/store';
@@ -35,7 +41,7 @@ const App = () => {
     } else {
       dispatch(authChecked());
     }
-  }, []);
+  }, [dispatch]);
 
   const handleModalClose = () => {
     navigate(location.state?.background?.pathname);
@@ -48,6 +54,7 @@ const App = () => {
         <Routes location={backgroundLocation || location}>
           <Route path='/' element={<ConstructorPage />} />
           <Route path='/feed' element={<Feed />} />
+          <Route path='/feed/:number' element={<OrderInfo />} />
           <Route path='/ingredients/:id' element={<IngredientDetails />} />
           <Route
             path='/login'
@@ -94,6 +101,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ProfileOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <ProtectedRoute>
+                <OrderInfo />
               </ProtectedRoute>
             }
           />

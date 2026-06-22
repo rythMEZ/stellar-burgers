@@ -18,17 +18,11 @@ const initialState: TFeedState = {
   error: null
 };
 
-export const fetchFeed = createAsyncThunk('feed/fetchFeed', async () => {
-  const data = await getFeedsApi();
-  return data;
-});
+export const fetchFeed = createAsyncThunk('feed/fetchFeed', getFeedsApi);
 
 export const fetchUserFeed = createAsyncThunk(
   'feed/fetchUserFeed',
-  async () => {
-    const data = await getOrdersApi();
-    return data;
-  }
+  getOrdersApi
 );
 
 export const feedSlice = createSlice({

@@ -14,17 +14,17 @@ export const ProtectedRoute = ({
   const isAuthChecked = useSelector((state) => state.user.isAuthChecked);
   const user = useSelector((state) => state.user.data);
   const location = useLocation();
+  const from = location.state?.from || { pathname: '/' };
 
   if (!isAuthChecked) {
     return <Preloader />;
   }
 
   if (!user && !onlyUnAuth) {
-    return <Navigate replace to='/login' />;
+    return <Navigate replace to='/login' state={{ from: location }} />;
   }
 
   if (user && onlyUnAuth) {
-    const from = location.state?.from || { pathname: '/' };
     return <Navigate replace to={from} />;
   }
 
