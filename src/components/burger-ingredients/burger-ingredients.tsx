@@ -3,12 +3,19 @@ import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { useSelector, useDispatch } from '../../services/store';
+import { Preloader } from '@ui';
+import styles from './burger-ingredients.module.css';
+import { selectBuns, selectMains, selectSauces } from '@selectors';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  const { ingredients, isLoading, error } = useSelector(
+    (state) => state.ingredients
+  );
+
+  const buns = useSelector(selectBuns);
+  const mains = useSelector(selectMains);
+  const sauces = useSelector(selectSauces);
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -47,7 +54,21 @@ export const BurgerIngredients: FC = () => {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return null;
+  if (isLoading) return <Preloader />;
+
+  if (error)
+    return (
+      <div className={`${styles.error} text text_type_main-medium pt-4`}>
+        {error}
+      </div>
+    );
+
+  if (ingredients.length === 0)
+    return (
+      <div className={`${styles.title} text text_type_main-medium pt-4`}>
+        Нет игредиентов
+      </div>
+    );
 
   return (
     <BurgerIngredientsUI
