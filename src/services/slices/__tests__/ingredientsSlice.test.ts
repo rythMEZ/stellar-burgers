@@ -1,17 +1,5 @@
 import { TIngredient } from '@utils-types';
-import reducer, { fetchIngredients } from '../ingredientsSlice';
-
-type TIngredientState = {
-  ingredients: TIngredient[];
-  isLoading: boolean;
-  error: string | null;
-};
-
-const initialState: TIngredientState = {
-  ingredients: [],
-  isLoading: false,
-  error: null
-};
+import reducer, { fetchIngredients, initialState } from '../ingredientsSlice';
 
 const mockIngredients: TIngredient[] = [
   {
@@ -56,30 +44,40 @@ const mockIngredients: TIngredient[] = [
 ];
 
 test('pending: должен установить isLoading в true и сбросить error', () => {
-  const state = reducer(undefined, fetchIngredients.pending(''));
-  expect(state.isLoading).toBe(true);
-  expect(state.error).toBeNull();
+  const state = { ...initialState };
+
+  const nextState = reducer(state, fetchIngredients.pending(''));
+  expect(nextState).toEqual({ ...state, isLoading: true, error: null });
 });
 
 test('fulfilled: должен загрузить ингредиенты, установить isLoading в false и сбросить error', () => {
-  const state = reducer(
-    undefined,
+  const state = { ...initialState, isLoading: true };
+
+  const nextState = reducer(
+    state,
     fetchIngredients.fulfilled(mockIngredients, '')
   );
-  expect(state.isLoading).toBe(false);
-  expect(state.error).toBeNull();
-  expect(state.ingredients).toEqual(mockIngredients);
-  expect(state.ingredients).toHaveLength(3);
+
+  expect(nextState).toEqual({
+    ...state,
+    isLoading: false,
+    ingredients: mockIngredients
+  });
 });
 
 test('rejected: должен установить isLoading в false и установить сообщение об ошибке', () => {
   const errorMessage = 'Ошибка загрузки';
-  const state = reducer(
-    undefined,
+
+  const state = { ...initialState, isLoading: true };
+  const nextState = reducer(
+    state,
     fetchIngredients.rejected(new Error(errorMessage), '')
   );
-  expect(state.isLoading).toBe(false);
-  expect(state.error).toBe(errorMessage);
+  expect(nextState).toEqual({
+    ...state,
+    isLoading: false,
+    error: errorMessage
+  });
 });
 
 test('должен вернуть initialState при неизвестном экшене', () => {

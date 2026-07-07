@@ -6,7 +6,6 @@ import { fetchUserFeed } from '../../services/slices/feedSlice';
 import { Preloader } from '@ui';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
   const orders: TOrder[] = useSelector((state) => state.feed.orders);
   const isLoading = useSelector((state) => state.feed.isLoading);

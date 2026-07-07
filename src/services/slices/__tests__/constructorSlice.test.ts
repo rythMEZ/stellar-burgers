@@ -1,11 +1,13 @@
-import { TIngredient } from '@utils-types';
+import { TConstructorIngredient, TIngredient } from '@utils-types';
 import reducer, {
   addIngredient,
   clearConstructor,
+  initialState,
   moveIngredientDown,
   moveIngredientUp,
   removeIngredient,
-  setBun
+  setBun,
+  TConstructorState
 } from '../constructorSlice';
 
 const bun: TIngredient = {
@@ -50,18 +52,6 @@ const sauce: TIngredient = {
   image_large: 'https://code.s3.yandex.net/react/code/sauce-02-large.png'
 };
 
-type TConstructorIngredient = TIngredient & { id: string };
-
-type TState = {
-  bun: TIngredient | null;
-  ingredients: TConstructorIngredient[];
-};
-
-const initialState = {
-  bun: null,
-  ingredients: []
-};
-
 const makeItem = (
   ingredient: TIngredient,
   id: string
@@ -73,7 +63,7 @@ const makeItem = (
 const createState = (
   ingredients: TConstructorIngredient[] = [],
   bunValue: TIngredient | null = null
-): TState => ({
+): TConstructorState => ({
   bun: bunValue,
   ingredients
 });
@@ -89,13 +79,16 @@ const setup = () => {
 
 // Установка булок бургера
 test('Установка булок бургера - setBun', () => {
-  expect(reducer(initialState, setBun(bun))).toEqual({ bun, ingredients: [] });
+  expect(reducer({ ...initialState }, setBun(bun))).toEqual({
+    bun,
+    ingredients: []
+  });
 });
 
 // Установка начинок бургера
 test('Установка начинок бургера - addIngredient', () => {
   const item = makeItem(ingredient, '1');
-  expect(reducer(initialState, addIngredient(item))).toEqual({
+  expect(reducer({ ...initialState }, addIngredient(item))).toEqual({
     bun: null,
     ingredients: [item]
   });
@@ -135,11 +128,11 @@ test('Удаление ингредиента - removeIngredient', () => {
 test('Очистка конструктора - clearConstructor', () => {
   const { state } = setup();
   const result = reducer(state, clearConstructor());
-  expect(result).toEqual(initialState);
+  expect(result).toEqual({ ...initialState });
 });
 
 test('Экшен, несуществующий в приложении', () => {
   const result = reducer(undefined, { type: 'UNKNOWN' });
 
-  expect(result).toEqual(initialState);
+  expect(result).toEqual({ ...initialState });
 });

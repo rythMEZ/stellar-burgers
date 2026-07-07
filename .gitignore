@@ -2,6 +2,7 @@ node_modules
 .env
 .idea
 dist
+coverage/
 
 # Playwright
 /test-results/
@@ -9,3 +10,4 @@ dist
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+

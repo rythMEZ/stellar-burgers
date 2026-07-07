@@ -87,61 +87,25 @@ test.describe('Тестирование создания заказа', () => {
       }
     ]);
 
-    await page.addInitScript(() => {
-      localStorage.setItem('refreshToken', 'test-refresh-token');
-      localStorage.setItem('accessToken', 'test-token');
+    await page.routeFromHAR('tests/hars/user.har', {
+      url: '**/api/auth/user',
+      update: false
     });
 
-    await context.route('**/api/auth/user', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          success: true,
-          user: {
-            id: '123',
-            email: 'test@test.com',
-            name: 'Test User'
-          }
-        })
-      });
-    });
-
-    await context.route('**/orders', async (route) => {
-      if (route.request().method() !== 'POST') return route.continue();
-
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          success: true,
-          order: {
-            number: 12345,
-            name: 'test order',
-            ingredients: []
-          }
-        })
-      });
+    await page.routeFromHAR('tests/hars/orders.har', {
+      url: '**/orders',
+      update: false
     });
 
     await page.routeFromHAR('tests/hars/ingredients.har', {
-      url: '**/ingredients'
+      url: '**/ingredients',
+      update: false
     });
 
     await page.goto('/');
+
     await expect(page.getByTestId(`ingredient-${bunId}`)).toBeVisible();
   });
-
-  test.afterEach(
-    'Очистка localStorage и sessionStorage',
-    async ({ context, page }) => {
-      await page.evaluate(() => {
-        localStorage.clear();
-        sessionStorage.clear();
-      });
-      await context.clearCookies();
-    }
-  );
 
   test('создание заказа', async ({ page }) => {
     // Добавляем ингредиенты
@@ -155,13 +119,13 @@ test.describe('Тестирование создания заказа', () => {
       .getByRole('button', { name: 'Добавить' })
       .click();
 
-    // Оформляем заказ
+    //  Оформляем заказ
     await page.getByTestId('order-button').click();
 
     // Открытие модального окна
     const modal = page.getByTestId('modal');
     await expect(modal).toBeVisible();
-    await expect(page.getByTestId('order-number')).toHaveText('12345');
+    await expect(page.getByTestId('order-number')).toHaveText('107844');
 
     // Очистка конструктора
     const constructor = page.getByTestId('burger-constructor');
