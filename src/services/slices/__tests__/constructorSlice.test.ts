@@ -64,6 +64,7 @@ const createState = (
   ingredients: TConstructorIngredient[] = [],
   bunValue: TIngredient | null = null
 ): TConstructorState => ({
+  ...initialState,
   bun: bunValue,
   ingredients
 });
@@ -79,17 +80,17 @@ const setup = () => {
 
 // Установка булок бургера
 test('Установка булок бургера - setBun', () => {
-  expect(reducer({ ...initialState }, setBun(bun))).toEqual({
-    bun,
-    ingredients: []
+  expect(reducer(initialState, setBun(bun))).toEqual({
+    ...initialState,
+    bun
   });
 });
 
 // Установка начинок бургера
 test('Установка начинок бургера - addIngredient', () => {
   const item = makeItem(ingredient, '1');
-  expect(reducer({ ...initialState }, addIngredient(item))).toEqual({
-    bun: null,
+  expect(reducer(initialState, addIngredient(item))).toEqual({
+    ...initialState,
     ingredients: [item]
   });
 });
@@ -98,9 +99,13 @@ test('Установка начинок бургера - addIngredient', () => {
 describe('Тесты перемещения ингредиентов в конструкторе', () => {
   const { first, second, state } = setup();
 
-  test('Тест перемешщения ингредиента вверх - moveIngredientUp', () => {
+  test('Тест перемещения ингредиента вверх - moveIngredientUp', () => {
     const result = reducer(state, moveIngredientUp('2'));
-    expect(result.ingredients).toEqual([second, first]);
+    expect(result).toEqual({
+      ...initialState,
+      bun,
+      ingredients: [second, first]
+    });
   });
 
   test('Игредиент остается на месте если он первый в списке', () => {
@@ -110,7 +115,11 @@ describe('Тесты перемещения ингредиентов в конс
 
   test('Тест перемешщения ингредиента вниз - moveIngredientDown', () => {
     const result = reducer(state, moveIngredientDown('1'));
-    expect(result.ingredients).toEqual([second, first]);
+    expect(result).toEqual({
+      ...initialState,
+      bun,
+      ingredients: [second, first]
+    });
   });
 
   test('Игредиент остается на месте если он последний в списке', () => {
@@ -128,7 +137,7 @@ test('Удаление ингредиента - removeIngredient', () => {
 test('Очистка конструктора - clearConstructor', () => {
   const { state } = setup();
   const result = reducer(state, clearConstructor());
-  expect(result).toEqual({ ...initialState });
+  expect(result).toEqual(initialState);
 });
 
 test('Экшен, несуществующий в приложении', () => {

@@ -62,17 +62,19 @@ test.describe('Тесты работы модальных окон', () => {
 
   test('Закрытие модального окна по крестику', async ({ page }) => {
     await page.getByTestId(`ingredient-${bunId}`).getByRole('link').click();
-    await expect(page.getByTestId('modal')).toBeVisible();
+    const modal = page.getByTestId('modal');
+    await expect(modal).toBeVisible();
     await page.getByTestId('modal-close').click();
-    await expect(page.getByTestId('modal')).not.toBeVisible();
+    await expect(modal).not.toBeVisible();
   });
   test('Закрытие модального окна по оверлею', async ({ page }) => {
     await page.getByTestId(`ingredient-${bunId}`).getByRole('link').click();
-    await expect(page.getByTestId('modal')).toBeVisible();
+    const modal = page.getByTestId('modal');
+    await expect(modal).toBeVisible();
     await page.getByTestId('modal-overlay').click({
       position: { x: 5, y: 5 }
     });
-    await expect(page.getByTestId('modal')).not.toBeVisible();
+    await expect(modal).not.toBeVisible();
   });
 });
 
